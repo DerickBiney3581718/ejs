@@ -1,9 +1,12 @@
 //? Easiest waay to create a promise
 // Promises return object(receipt) to show the availability of the function's outcome
+// use .then to register a function to be called when the promise is resolved
+// promise resolving means that the promise has returned a value
 Promise.resolve(150).then(console.log)
 Promise.resolve(new Promise((resolve) => resolve('apathy|empathy'))).then((value) => { console.log(value); return `What's up bitches` })
     .then(console.log)
 
+// thread is another running program that does not block the main thread
 console.log('Starting shit up')
 // # PASSING CALLBACKS 
 // ?change from callbacks to promises
@@ -14,7 +17,12 @@ function compareFiles(fileA, fileB, callback) {
         });
     });
 }
+async function compareFilesPr(fileA, fileB) {
+    return new Promise(resolve => { const content = readTextFile(fileA); resolve(content) })
+        .then((cA) => { const cB = readTextFile(fileB); return (cA === cB) })
+        .then((isSame) => callback(isSame))
 
+}
 // ? thens can be chained because
 // ? what happens
 new Promise((_, reject) => reject(new Error("Fail")))
@@ -63,3 +71,17 @@ function crackPasscode(networkID) {
 }
 
 
+// !generators* are special functions that returns iterators
+// it automatically holds it's own state, no longer write an iter object to hold the curr state
+Group.prototype[Symbol.iterator] = function* () { for (; ;) yield 'something' }
+
+
+// promise.all returns
+async function fileSizes(files) {
+    let list = "";
+    await Promise.all(files.map(async fileName => {
+        list += fileName + ": " +
+            (await textFile(fileName)).length + "\n";
+    }));
+    return list;
+}
